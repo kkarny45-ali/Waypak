@@ -125,6 +125,10 @@ header { display:flex; align-items:center; justify-content:space-between;
 
 /* FALLBACK (Google Maps) PAGE */
 .note { padding:14px 16px; font-size:15px; line-height:1.5; }
+#areaInfo { margin:0 16px 10px; padding:12px 14px; border:1px solid var(--line); border-radius:12px; background:#f4f9fd; font-size:14.5px; line-height:1.55; }
+#areaInfo:empty { display:none; }
+#areaInfo h3 { font-size:16px; margin-bottom:4px; }
+#areaInfo .chip { margin:6px 6px 0 0; }
 #map { width:100%; height:340px; border:0; }
 .btn { display:block; margin:12px 16px; text-align:center; background:var(--blue); color:#fff;
        text-decoration:none; padding:13px; border-radius:12px; font-size:17px; }
@@ -400,6 +404,20 @@ table.menu td:first-child { font-weight:700; white-space:nowrap; }
 #logo .brandWord{font-size:34px;font-weight:800;color:var(--blue);letter-spacing:.5px;line-height:1}
 #logo .brandImg{height:60px;width:auto;max-width:60%;object-fit:contain}
 @media (min-width:700px){#logo .brandImg{height:80px}#logo .brandWord{font-size:42px}}
+
+/* ---- v2 hostel page: contact buttons, tags, 4-level checklist, menu picture ---- */
+.callRow{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+.callBtn{display:block;text-decoration:none;border-radius:12px;padding:9px 6px;color:#fff;text-align:center;line-height:1.25}
+.callBtn small{display:block;font-size:11px;opacity:.92}.callBtn b{font-size:15px;letter-spacing:.3px}
+.callBtn.zong{background:#4f8f1d}.callBtn.jazz{background:#c62828}.callBtn.wa{grid-column:1/-1;background:#1d9d5b}
+.ptags{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-top:8px}
+.ptags span{background:#eef6fc;color:#2a4a63;border-radius:10px;padding:3px 10px;font-size:12px;font-weight:700}
+.ck{flex-wrap:wrap;gap:4px 6px}.ck span{flex:1 1 100%;font-weight:600}
+.ck .bx{flex:1 1 0;min-width:0;white-space:nowrap;font-size:11.5px}
+.bx.vgood.on::before{background:#17899b}
+.menu th small{display:block;font-weight:400;font-size:11px}
+.menuPic img{width:100%;border-radius:12px;margin-top:10px;display:block}
+.menu{width:100%;table-layout:fixed}.menu td,.menu th{font-size:12.5px;padding:6px 4px;word-break:break-word;vertical-align:top}.menu th:first-child,.menu td:first-child{width:23%}
 </style>
 </head>
 
@@ -437,7 +455,7 @@ table.menu td:first-child { font-weight:700; white-space:nowrap; }
 
   <!-- Shown only while the person is typing, so the page is never empty -->
   <section id="fill">
-    <h3>&#128293; Popular searches</h3>
+    <h3 id="popHead">&#128293; Popular searches</h3>
     <div id="popular"></div>
     <div id="recentBox"><h3>&#128339; Your recent searches</h3><div id="recent"></div></div>
     <p class="tip">&#128161; Spelling mistake? No problem, we will show the nearest name.</p>
@@ -449,7 +467,7 @@ table.menu td:first-child { font-weight:700; white-space:nowrap; }
       <div><h3>Complaint box</h3><p>Had a bad experience with a hostel? Tell us. We read every message.</p></div>
     </div>
     <label for="cPlace">Hostel or place name (optional)</label>
-    <input id="cPlace" maxlength="80" autocomplete="off" placeholder="e.g. Al-Makkah Boys Hostel, Qasimabad">
+    <input id="cPlace" maxlength="80" autocomplete="off" placeholder="e.g. hostel name and area">
     <label for="cText">Your complaint</label>
     <textarea id="cText" maxlength="500" placeholder="Write what happened..."></textarea>
     <div class="cfoot"><span id="cCount">0 / 500</span><button type="button" id="cSend">&#128241; Send on WhatsApp</button></div>
@@ -480,22 +498,27 @@ table.menu td:first-child { font-weight:700; white-space:nowrap; }
         <button type="button" class="sBtn next" id="sNext" aria-label="Next photo">&#8250;</button>
         <div class="dots" id="dDots"></div>
       </div>
-      <!-- 2. price per month -->
+      <!-- 2. price per month (fan room price is the default) -->
       <section class="priceCard">
         <div class="pn" id="dName"></div><div class="pa" id="dArea"></div>
-        <div class="pp"><b id="dPrice"></b><span>per month</span></div>
+        <div class="pp"><b id="dPrice"></b><span id="dPriceFor">per month</span></div>
+        <div class="ptags" id="dTags"></div>
       </section>
-      <!-- 3. register by WhatsApp -->
+      <!-- 3. register by WhatsApp + the two Waypak numbers -->
       <div class="regRow" style="text-align:center">
         <a class="regBtn" id="regBtn" target="_blank" rel="noopener">&#128241; Register by WhatsApp &middot; Pay offline</a>
-        <div class="cline">Contact: <span class="helpline">&#128222; <b>9230201248794</b></span><span class="copied">Copied &#10004;</span></div>
+        <div class="callRow">
+          <a class="callBtn zong" id="callZong"><small>&#128222; Zong &middot; Call</small><b id="zongTxt"></b></a>
+          <a class="callBtn jazz" id="callJazz"><small>&#128222; Jazz &middot; Call</small><b id="jazzTxt"></b></a>
+          <a class="callBtn wa" id="waJazz" target="_blank" rel="noopener"><small>&#128172; Jazz &middot; WhatsApp</small><b id="waTxt"></b></a>
+        </div>
       </div>
-      <!-- 4. owner name + small circle photo -->
+      <!-- 4. owner: name + small round photo only -->
       <section class="owner"><div class="opic" id="ownerPic"></div><div><small>Hostel owner</small><b id="ownerName"></b></div></section>
     </div>
 
     <div class="dright">
-      <!-- 5. honest review + Waypak rating -->
+      <!-- 5. honest review + Waypak rating (from the admin's checklist) -->
       <section class="rev">
         <h3 class="rh">Honest <b>Review</b> by Waypak</h3>
         <p id="dText"></p>
@@ -503,12 +526,10 @@ table.menu td:first-child { font-weight:700; white-space:nowrap; }
         <div class="rv bad"><b>&#9888;&#65039; Needs improvement</b><ul id="dBad"></ul></div>
         <div class="rate">Waypak rating: <b id="dRate"></b></div>
       </section>
-      <!-- 6. Google rating -->
-      <div class="gcard2" id="dGoogle"></div>
-      <!-- 7. total rooms, total persons, free beds -->
+      <!-- 7. total rooms, persons now, free beds -->
       <div class="stats">
         <div class="stat"><b id="dRooms"></b><span>Total rooms</span></div>
-        <div class="stat"><b id="dPersons"></b><span>Total persons</span></div>
+        <div class="stat"><b id="dPersons"></b><span>Persons now</span></div>
         <div class="stat free" id="dFreeBox"><b id="dFree"></b><span>Free beds</span></div>
       </div>
       <!-- 8. checklist -->
@@ -516,16 +537,17 @@ table.menu td:first-child { font-weight:700; white-space:nowrap; }
         <h3 class="rh">&#9989; Waypak Checklist</h3>
         <div id="dChecks"></div>
       </section>
-      <!-- 9. other details: eating time, mosque distance... -->
+      <!-- 9. all other details the admin filled in -->
       <section class="rev">
-        <h3 class="rh">Other details</h3>
+        <h3 class="rh">Hostel details</h3>
         <div id="dInfo"></div>
         <div class="perks" id="dFacts" style="margin-top:10px"></div>
       </section>
       <!-- 10. weekly food menu -->
-      <section class="rev">
+      <section class="rev" id="menuBox">
         <h3 class="rh">&#127858; Weekly food menu</h3>
         <div class="menuWrap"><table class="menu" id="dMenu"></table></div>
+        <div class="menuPic" id="dMenuPic"></div>
       </section>
       <div id="tipSlot"></div>
     </div>
@@ -537,6 +559,7 @@ table.menu td:first-child { font-weight:700; white-space:nowrap; }
   <div class="bar warn" id="fbBar"></div>
   <p class="note"><b>Thank you for searching!</b> We don't have verified hostels here yet, but we are adding
      this area and <b>will list hostels here very soon</b>.</p>
+  <div id="areaInfo"></div>
   <div id="didYou"></div>
   <h3 class="gh">Unverified list by Waypak on Google</h3>
   <p class="gsub">Not checked by Waypak. Call and visit before you pay anything.</p>
@@ -555,11 +578,10 @@ table.menu td:first-child { font-weight:700; white-space:nowrap; }
 </main>
 
 <!-- Ad area -->
-<div class="ad">
+<div class="ad" hidden>   <!-- hidden until you paste your real AdSense code below and remove "hidden" -->
   <small>google ads</small>
   <div class="adbox">
     <!-- Paste your Google AdSense code here -->
-    <b>Student Tech Accessories</b><br><small>Professional gear for students.</small><br><a>Learn now</a>
   </div>
 </div>
 
@@ -621,7 +643,9 @@ table.menu td:first-child { font-weight:700; white-space:nowrap; }
 <script>
 /* ---------- A. SETTINGS: change these ---------- */
 const CONFIG = {
-  WHATSAPP: "923001234567",  // your WhatsApp number: country code + number, no + or spaces
+  WHATSAPP: "923272662739",  // Jazz number used for WhatsApp (country code + number, no + or spaces)
+  CALL_ZONG: "03103783227",  // Zong number: call
+  CALL_JAZZ: "03272662739",  // Jazz number: call + WhatsApp
   GOOGLE_MAPS_KEY: "",       // Google key with "Places API (New)", "Maps JavaScript API" + "Maps Embed API" on. Empty = map only
   LOG_URL: "",               // your Google Apps Script link that saves every search to a Google Sheet
   LIVE_URL: "https://script.google.com/macros/s/AKfycbzzCPVgMaXuob7JtxKZPxLEL91KsGyxeBt3UVnvsTF4nFsA0Jyj2kfCqfur1_eYtJl0/exec",   // your Waypak Google script link (live rent and free beds)
@@ -630,89 +654,16 @@ const CONFIG = {
   MUSIC_MAX_MS: 23000        // music never plays longer than 23 seconds
 };
 
-/* ---------- B. DATA: our hostel list (SAMPLE DATA, replace with real hostels) ----------
-   area/city/near = words people may search for. walk = metres from the area centre.  */
-const P = ["Generator", "3 Meals", "Free Wi-Fi"];   // default amenities
-const HOSTELS = [
-  // Qasimabad, Hyderabad (the 5 hostels from your screenshot)
-  {id:1, name:"Al-Makkah Boys Hostel",     area:"Qasimabad", city:"Hyderabad", walk:200,  price:12000, gender:"boys"},
-  {id:2, name:"Sukun Student Residency",   area:"Qasimabad", city:"Hyderabad", walk:450,  price:10500, gender:"boys"},
-  {id:3, name:"Mehran Luxury Hostel",      area:"Qasimabad", city:"Hyderabad", walk:600,  price:14000, gender:"boys"},
-  {id:4, name:"Bright Girls Hostel",       area:"Qasimabad", city:"Hyderabad", walk:1100, price:11000, gender:"girls"},
-  {id:5, name:"Kamyab Student Home",       area:"Qasimabad", city:"Hyderabad", walk:1500, price:13500, gender:"boys"},
-  // Jamshoro
-  {id:6, name:"Indus Boys Hostel",   area:"Jamshoro", city:"Jamshoro", near:["sindh university","mehran uet","lumhs"], walk:300, price:8500, gender:"boys"},
-  {id:7, name:"Noor Girls Residency",area:"Jamshoro", city:"Jamshoro", near:["sindh university","mehran uet","lumhs"], walk:500, price:9500, gender:"girls", perks:["Generator","Free Wi-Fi"]},
-  {id:8, name:"Scholars Inn",        area:"Jamshoro", city:"Jamshoro", near:["sindh university","mehran uet","lumhs"], walk:800, price:9000, gender:"boys"},
-  // Lahore
-  {id:9,  name:"Green Valley Boys Hostel", area:"Johar Town", city:"Lahore", near:["ucp","university of lahore"], walk:350, price:16000, gender:"boys"},
-  {id:10, name:"Zainab Girls Hostel",      area:"Johar Town", city:"Lahore", near:["ucp","university of lahore"], walk:600, price:17000, gender:"girls"},
-  // Karachi
-  {id:11, name:"Metro Boys Hostel",  area:"Gulshan-e-Iqbal", city:"Karachi", near:["ned university","karachi university","gulshan"], walk:400, price:15000, gender:"boys"},
-  {id:12, name:"Falak Girls Hostel", area:"Gulshan-e-Iqbal", city:"Karachi", near:["ned university","karachi university","gulshan"], walk:700, price:15500, gender:"girls"},
-  // Islamabad
-  {id:13, name:"Margalla Boys Hostel", area:"H-12", city:"Islamabad", near:["nust","h12"], walk:500, price:18000, gender:"boys"},
-  {id:14, name:"Sitara Girls Hostel",  area:"H-12", city:"Islamabad", near:["nust","h12"], walk:800, price:19000, gender:"girls"}
-];
-
-/* Extra details per hostel id (SAMPLE numbers, edit them):
-   beds = free beds now, room = persons per room, bed = "Bed" or "Charpai", cool = "Fan" or "AC" */
-const EXTRA = {
-  1:{beds:3,room:2,bed:"Bed",cool:"AC"},      2:{beds:5,room:4,bed:"Charpai",cool:"Fan"},
-  3:{beds:0,room:1,bed:"Bed",cool:"AC"},      4:{beds:2,room:3,bed:"Bed",cool:"Fan"},
-  5:{beds:6,room:2,bed:"Bed",cool:"Fan"},     6:{beds:8,room:4,bed:"Charpai",cool:"Fan"},
-  7:{beds:1,room:3,bed:"Bed",cool:"Fan"},     8:{beds:4,room:3,bed:"Bed",cool:"Fan"},
-  9:{beds:2,room:2,bed:"Bed",cool:"AC"},      10:{beds:3,room:2,bed:"Bed",cool:"AC"},
-  11:{beds:5,room:3,bed:"Bed",cool:"Fan"},    12:{beds:0,room:2,bed:"Bed",cool:"Fan"},
-  13:{beds:4,room:2,bed:"Bed",cool:"AC"},     14:{beds:2,room:3,bed:"Bed",cool:"Fan"}
-};
-HOSTELS.forEach(h => Object.assign(h, EXTRA[h.id]));   // joins the table above into the hostel list
-
-/* Waypak review per hostel id (SAMPLE TEXT, replace with your real visit notes before publishing).
-   [rating out of 10, food, cleaning, kitchen, room, bathroom, Google rating, short review, then 5 letters for:
-    room light, water supply, security, fresh air, quiet at night]
-   P = Poor, G = Good, E = Excellent */
-const REVIEWS = {
-  1:[8,"G","E","G","G","P",4.2,"Closest to the campus gate. Rooms are bright and clean; the bathroom needs repair.","GEGGG"],
-  2:[7,"G","G","P","G","G",4.0,"Cheapest in the area. Food is decent, but the kitchen is not kept clean.","GGGGG"],
-  3:[9,"E","E","E","E","G",4.5,"Premium rooms with AC and tidy staff. Costs more, but you feel the difference.","EEEEE"],
-  4:[8,"G","G","G","E","E",4.3,"Safe, calm hostel for girls. Rooms and bathrooms are very clean.","GGEEG"],
-  5:[7,"G","G","G","G","G",3.9,"Fair price and good food. A bit far, so plan for the walk.","GGGGG"],
-  6:[6,"P","G","P","G","P",3.6,"Very low rent and big shared rooms. Food and kitchen need improvement.","PGPGP"],
-  7:[8,"G","E","G","G","G",4.2,"Neat and well managed. Only one meal option, but it is fresh.","GGGEG"],
-  8:[7,"G","G","G","G","P",3.8,"Good study atmosphere. Bathroom queue in the morning.","GGGGP"],
-  9:[8,"G","G","E","G","G",4.1,"Good food and a spotless kitchen. Rooms are small.","GGGGG"],
-  10:[8,"E","G","G","E","G",4.3,"Safe area, polite staff, tasty home-style food.","GGEGE"],
-  11:[7,"G","G","G","G","G",3.9,"Decent hostel near the campus. Water supply can be slow at times.","GGGGG"],
-  12:[6,"P","G","P","G","G",3.7,"Currently full. Cleanliness is average, location is good.","PGPGG"],
-  13:[9,"E","E","G","E","E",4.6,"Best option near NUST: AC rooms, clean bathrooms, quiet at night.","EEEGE"],
-  14:[7,"G","G","G","G","G",4.0,"Safe and quiet for girls. Rooms are shared by three students.","GGEGG"]
-};
-Object.entries(REVIEWS).forEach(([id, r]) => Object.assign(HOSTELS.find(h => h.id == id),
-  {rating:r[0], q:{food:r[1], clean:r[2], kitchen:r[3], room:r[4], bath:r[5], light:r[8][0], water:r[8][1], safe:r[8][2], air:r[8][3], quiet:r[8][4]}, google:r[6], review:r[7]}));
-
-/* More details per hostel (SAMPLE DATA: replace with the real facts from your visit) */
-const OWNERS_M = ["Haji Abdul Rehman", "Muhammad Aslam", "Sajid Hussain", "Ghulam Mustafa", "Imran Shah", "Tariq Mehmood"];
-const OWNERS_F = ["Mrs. Farzana Bibi", "Mrs. Nasreen Akhtar", "Mrs. Shaista Parveen"];
-HOSTELS.forEach(h => {
-  h.owner = h.gender === "girls" ? OWNERS_F[h.id % OWNERS_F.length] : OWNERS_M[h.id % OWNERS_M.length];
-  h.ownerPic = "";                                    // put a photo link here, e.g. "owner1.jpg"
-  h.rooms = 6 + (h.id * 3) % 9;                       // total rooms
-  h.persons = h.rooms * (h.room || 2);                // total persons living
-  h.mosque = 80 + (h.id * 53) % 420;                  // metres to the nearest mosque
-  h.meals = {b: "7:30 - 9:00 AM", l: "1:00 - 2:30 PM", d: "8:00 - 9:30 PM"};
-  if (h.q) { h.q.road = ["G", "E", "G", "P", "G"][h.id % 5]; h.q.noise = ["G", "G", "E", "P", "G", "E"][h.id % 6]; }
-});
-// Weekly menu (same for all hostels for now; give a hostel its own list with h.menu = [...])
-const MENU = [
-  ["Monday",    "Aloo Paratha & Chai", "Chicken Karahi, Roti",   "Daal Mash, Rice"],
-  ["Tuesday",   "Halwa Puri",          "Daal Chawal",            "Aloo Gosht, Roti"],
-  ["Wednesday", "Omelette & Paratha",  "Mix Sabzi, Roti",        "Chicken Biryani"],
-  ["Thursday",  "Anda Fry & Chai",     "Chana Pulao",            "Qeema, Roti"],
-  ["Friday",    "Paratha & Chai",      "Chicken Pulao, Raita",   "Daal Fry, Roti"],
-  ["Saturday",  "Halwa Puri",          "Karahi Gosht, Roti",     "Kabuli Pulao"],
-  ["Sunday",    "Special Nashta",      "Biryani, Raita",         "Bhindi, Roti"]
-];
+/* ---------- B. DATA: hostels come ONLY from the Waypak admin app (loaded in section O) ----------
+   Nothing is typed in here. Add or edit a hostel in the admin app and it appears here by itself. */
+const HOSTELS = [];
+const LV = ["Poor", "Good", "Very good", "Excellent"], LVC = ["poor", "good", "vgood", "excellent"];
+const CHECKS = [["food", "Food quality"], ["clean", "Cleaning"], ["room", "Room quality"], ["space", "Room space according to persons"], ["bath", "Bathroom"],
+                ["water", "Water supply"], ["secure", "Security and privacy"], ["air", "Ventilation (air)"], ["quiet", "Quietness (silent surroundings)"], ["wifi", "WiFi speed"]];
+const DAYN = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+const POWER = {none: "No power backup", solar: "Solar system", generator: "Generator", both: "Solar + generator"};
+const COOL = {fan: "Fan rooms", ac: "AC rooms", both: "Fan + AC rooms"};
+const GENDER = {boys: "Boys", girls: "Girls", both: "Boys & girls"};
 
 /* ---------- C. SEARCH ENGINE ---------- */
 // Words that carry no location meaning are ignored
@@ -751,11 +702,11 @@ function search(query) {
   else if (/\b(boys?|male)\b/.test(text)) gender = "boys";
 
   const tokens = text.split(" ").filter(t => t && !STOP.has(t) && !/^(girls?|boys?|female|male)$/.test(t));
-  if (!tokens.length) return gender ? HOSTELS.filter(h => h.gender === gender) : [];
+  if (!tokens.length) return gender ? HOSTELS.filter(h => h.gender === gender || h.gender === "both") : [];
 
   const found = [];
   for (const h of HOSTELS) {
-    if (gender && h.gender !== gender) continue;
+    if (gender && h.gender !== gender && h.gender !== "both") continue;
     const words = norm([h.area, h.city, h.name, ...(h.near || [])].join(" ")).split(" ");
     const scores = tokens.map(t => wordScore(t, words));
     const matched = scores.filter(s => s > 0).length;
@@ -768,7 +719,7 @@ function search(query) {
 
 /* ---------- D. SMALL HELPERS ---------- */
 const $ = id => document.getElementById(id);
-const esc = s => s.replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const title = s => s.replace(/\b[a-z]/g, c => c.toUpperCase());
 const dist = m => m < 1000 ? m + "m Walk" : (m / 1000) + "km Walk";
 const rs = n => "Rs. " + n.toLocaleString("en-US");
@@ -811,30 +762,28 @@ function renderList() {
   $("list").innerHTML = sorted.map((h, i) => `
     <div class="card ${h.id === state.selected ? "sel" : ""}" data-id="${h.id}">
       <h3>${i + 1}. ${esc(h.name)}</h3>
-      <div class="row"><span>&#128205; ${dist(h.walk)} <span class="tag">${h.gender}</span></span>
+      <div class="row"><span>&#128205; ${dist(h.walk)} <span class="tag">${GENDER[h.gender] || h.gender}</span></span>
       ${bedsBadge(h)}<b>${rs(h.price)}/mo</b></div>
     </div>`).join("");
 }
 
-// FIRST tap on a hostel: small details panel on top (photos, wifi, generator...)
+// FIRST tap on a hostel: small details panel on top (photos, power, fan/AC...)
 function renderSheet(h) {
-  const count = h.photos && h.photos.length ? Math.min(h.photos.length, 10) : 10;   // up to 10 photos
-  const photos = Array.from({length: count}, (_, i) => h.photos && h.photos[i]
-      ? `<img class="ph" src="${h.photos[i]}" alt="${esc(h.name)}">`
-      : `<div class="ph">&#128719;<small>${i + 1}/10</small></div>`).join("");
+  const photos = (h.photos || []).map((u, i) => `<img class="ph" src="${u}" alt="${esc(h.name)} ${i + 1}">`).join("");
   $("sheet").className = "sheet on";
   $("sheet").innerHTML = `
-    <div class="photos">${photos}</div>
+    ${photos ? `<div class="photos">${photos}</div>` : ""}
     <div class="perks">${factChips(h)}</div>
     <div class="hint">Tap <b>${esc(h.name)}</b> again to open its full page &#8250;</div>`;
 }
-function factChips(h) {                 // wifi, generator, meals + persons per room, bed type, fan/AC
-  const extras = [
-    h.room ? "&#128101; " + (h.room === 1 ? "Single room" : h.room + " per room") : "",
-    h.bed  ? "&#128719; " + h.bed : "",
-    h.cool ? (h.cool === "AC" ? "&#10052;&#65039; AC" : "&#127744; Fan") : ""
-  ].filter(Boolean);
-  return (h.perks || P).map(p => `<span>${p}</span>`).join("") + extras.map(x => `<span class="x">${x}</span>`).join("");
+function factChips(h) {                 // everything comes from what the admin filled in
+  const d = h.d, c = d.cap, out = [];
+  if (d.power) out.push(POWER[d.power]);
+  if (d.cool) out.push(COOL[d.cool]);
+  const xs = [];
+  if (c.ppr) xs.push("&#128101; " + (c.ppr === "1" ? "Single room" : c.ppr + " per room"));
+  xs.push("&#128100; " + (GENDER[h.gender] || "Boys"));
+  return out.map(p => `<span>${esc(p)}</span>`).join("") + xs.map(x => `<span class="x">${x}</span>`).join("");
 }
 
 function select(id) {
@@ -844,62 +793,78 @@ function select(id) {
   renderSheet(HOSTELS.find(h => h.id === id));
 }
 
-// SECOND tap: the hostel's own page
-const LEVELS = [["P", "Poor"], ["G", "Good"], ["E", "Excellent"]];
-const CHECKS = [["food", "Food quality"], ["clean", "Cleaning"], ["kitchen", "Kitchen cleaning"], ["room", "Room quality"], ["bath", "Bathroom"],
-                ["light", "Room light"], ["water", "Water supply"], ["safe", "Security"], ["air", "Fresh air"], ["quiet", "Quiet at night"],
-                ["road", "Road quality near hostel"], ["noise", "Quiet surroundings in daytime"]];
+// distance to what the person searched (college / area), otherwise to the nearest place the admin listed
+function walkFor(h, query) {
+  const near = h.d.near, toks = norm(query).split(" ").filter(t => t && !STOP.has(t));
+  const hit = near.filter(x => toks.some(t => wordScore(t, norm(x.n).split(" ")) > 0)).map(x => x.m);
+  return hit.length ? Math.min(...hit) : (near.length ? Math.min(...near.map(x => x.m)) : (h.walk0 || h.walk));
+}
+const t12 = s => { const m = /^(\d{1,2}):(\d{2})$/.exec(s || ""); if (!m) return ""; let H = +m[1]; const ap = H >= 12 ? "PM" : "AM"; H = H % 12 || 12; return H + ":" + m[2] + " " + ap; };
+const km = m => m < 1000 ? m + " m" : (Math.round(m / 100) / 10) + " km";
+const phoneShow = n => String(n).replace(/^(\d{4})(\d+)$/, "$1 $2");
+const score10 = h => { const v = CHECKS.map(([k]) => LV.indexOf(h.d.rate[k])).filter(i => i >= 0); return v.length ? Math.round(v.reduce((a, b) => a + b + 1, 0) * 100 / (v.length * 4)) / 10 : null; };
+
+// SECOND tap: the hostel's own page. Shows what the admin filled in, except the owner's private details (only owner name + picture)
 function openDetail(id) {
-  const h = HOSTELS.find(x => x.id === id);
+  const h = HOSTELS.find(x => x.id === id), d = h.d, c = d.cap;
   const msg = `Assalam o Alaikum, I want to register for ${h.name} (${h.area}, ${h.city}) through Waypak. I will pay offline. Please send my Rs. 500 discount code.`;
-  // 1) photo slider (up to 10 photos, slides by itself)
-  const slides = Array.from({length: h.photos && h.photos.length ? h.photos.length : 10}, (_, i) => h.photos && h.photos[i]
-      ? `<img src="${h.photos[i]}" alt="${esc(h.name)} ${i + 1}">`
-      : `<div style="background:linear-gradient(135deg,hsl(${i * 36} 35% 62%),hsl(${i * 36} 35% 38%))">&#128719;<small>Photo ${i + 1} / 10</small></div>`);
-  $("dPhotos").innerHTML = slides.join("");
-  $("dDots").innerHTML = slides.map((_, i) => `<i class="${i ? "" : "on"}"></i>`).join("");
-  // 2) price per month
-  $("dName").textContent = h.name; $("dArea").textContent = `${h.area}, ${h.city}`; $("dPrice").textContent = rs(h.price);
-  // 3) register by WhatsApp
+  // 1) photo slider (slides by itself, swipe or arrows)
+  const ph = h.photos || [];
+  $("dPhotos").innerHTML = ph.length ? ph.map((u, i) => `<img src="${u}" alt="${esc(h.name)} ${i + 1}">`).join("") : `<div style="background:linear-gradient(135deg,#8fb0d6,#3d5f8a)">&#128719;<small>Photos coming soon</small></div>`;
+  $("dDots").innerHTML = ph.length > 1 ? ph.map((_, i) => `<i class="${i ? "" : "on"}"></i>`).join("") : "";
+  $("sPrev").style.display = $("sNext").style.display = ph.length > 1 ? "" : "none";
+  // 2) price per month (the fan-room price is the default price)
+  $("dName").textContent = h.name; $("dArea").textContent = [h.area, h.city, h.province].filter(Boolean).join(", ");
+  $("dPrice").textContent = h.price ? rs(h.price) : "-";
+  $("dPriceFor").textContent = "per month" + (d.cool === "ac" ? " (AC room)" : d.cool ? " (fan room)" : "");
+  $("dTags").innerHTML = `<span>${esc(GENDER[h.gender] || "Boys")}</span>` + (d.power ? `<span>${esc(POWER[d.power])}</span>` : "") + (d.cool ? `<span>${esc(COOL[d.cool])}</span>` : "");
+  // 3) register by WhatsApp + the two Waypak numbers
   $("regBtn").href = "https://wa.me/" + CONFIG.WHATSAPP + "?text=" + encodeURIComponent(msg);
   $("regBtn").innerHTML = h.beds === 0 ? "&#128241; Full now &middot; Ask on WhatsApp" : "&#128241; Register by WhatsApp &middot; Pay offline";
-  // 4) owner + small round picture
+  // 4) owner: name + small round picture only
   $("ownerName").textContent = h.owner || "-";
   $("ownerPic").innerHTML = h.ownerPic ? `<img src="${h.ownerPic}" alt="Owner">` : esc((h.owner || "?").replace(/^(Haji|Mrs\.|Mr\.)\s*/, "").charAt(0));
-  // 5) honest review + Waypak rating
-  $("dText").textContent = h.review || "Review coming soon.";
-  const lv = k => (h.q && h.q[k]) || "";
-  const liked = [...CHECKS.filter(([k]) => lv(k) === "E"), ...CHECKS.filter(([k]) => lv(k) === "G")].slice(0, 4)
-      .map(([k, l]) => (lv(k) === "E" ? "Excellent " : "Good ") + l.toLowerCase());
-  const needs = CHECKS.filter(([k]) => lv(k) === "P").map(([k, l]) => "Poor " + l.toLowerCase() + ", needs improvement");
-  $("dGood").innerHTML = (liked.length ? liked : ["-"]).map(x => `<li>${x}</li>`).join("");
-  $("dBad").innerHTML = (needs.length ? needs : ["Nothing serious found at our visit"]).map(x => `<li>${x}</li>`).join("");
-  $("dRate").textContent = (h.rating || "-") + "/10";
-  // 6) Google rating
-  $("dGoogle").innerHTML = h.google ? `&#11088; <b>${h.google}</b> <span>/ 5 rating on Google</span>` : "Google rating: not available yet";
-  // 7) rooms, persons, free beds
-  $("dRooms").textContent = h.rooms || "-"; $("dPersons").textContent = h.persons || "-";
-  $("dFree").textContent = h.beds === undefined ? "-" : h.beds;
+  // 5) honest review by Waypak, built from the admin's checklist
+  const lv = k => d.rate[k] || "";
+  const cnt = LV.map(l => [l, CHECKS.filter(([k]) => lv(k) === l).length]).filter(x => x[1]).reverse();
+  const rated = CHECKS.filter(([k]) => lv(k)).length;
+  $("dText").textContent = rated ? `Waypak checked ${rated} things at this hostel: ` + cnt.map(([l, n]) => n + " " + l).join(", ") + "." : "Review coming soon.";
+  const liked = [...CHECKS.filter(([k]) => lv(k) === "Excellent"), ...CHECKS.filter(([k]) => lv(k) === "Very good")].map(([k, l]) => lv(k) + " " + l.toLowerCase());
+  const needs = CHECKS.filter(([k]) => lv(k) === "Poor").map(([k, l]) => "Poor " + l.toLowerCase() + ", needs improvement");
+  $("dGood").innerHTML = (liked.length ? liked : ["-"]).map(x => `<li>${esc(x)}</li>`).join("");
+  $("dBad").innerHTML = (needs.length ? needs : [rated ? "Nothing serious found at our visit" : "-"]).map(x => `<li>${esc(x)}</li>`).join("");
+  const sc = score10(h); $("dRate").textContent = sc === null ? "-" : sc + "/10";
+  // 7) rooms, persons now, free beds
+  $("dRooms").textContent = c.rooms || "-"; $("dPersons").textContent = h.persons == null ? "-" : h.persons;
+  $("dFree").textContent = h.beds == null ? "-" : h.beds;
   $("dFreeBox").className = "stat free " + (h.beds === 0 ? "full" : h.beds <= 2 ? "low" : "ok");
-  // 8) checklist (Poor / Good / Excellent)
+  // 8) checklist (Poor / Good / Very good / Excellent) = the admin's checklist
   $("dChecks").innerHTML = CHECKS.map(([k, label]) => `<div class="ck"><span>${label}</span>` +
-    LEVELS.map(([c, t]) => `<i class="bx ${h.q && h.q[k] === c ? "on " + t.toLowerCase() : ""}">${t}</i>`).join("") + `</div>`).join("");
-  // 9) other details: eating time, mosque distance...
-  const m = h.meals || {};
-  const row = (a, b) => `<div class="irow"><span>${a}</span><b>${b}</b></div>`;
-  $("dInfo").innerHTML = row("&#127859; Breakfast time", m.b || "-") + row("&#127861; Lunch time", m.l || "-") +
-    row("&#127869; Dinner time", m.d || "-") + row("&#128332; Distance from mosque", h.mosque ? dist(h.mosque).replace(" Walk", "") : "-") +
-    row("&#128205; Distance from campus", dist(h.walk));
-  $("dFacts").innerHTML = `<span class="x">${h.gender}</span>` + factChips(h);
-  // 10) weekly food menu (today is highlighted)
-  const menu = h.menu || MENU, today = (new Date().getDay() + 6) % 7;
-  $("dMenu").innerHTML = `<tr><th>Day</th><th>Breakfast</th><th>Lunch</th><th>Dinner</th></tr>` +
-    menu.map((r, i) => `<tr class="${i === today ? "today" : ""}">${r.map(c => `<td>${esc(c)}</td>`).join("")}</tr>`).join("");
+    LV.map((t, i) => `<i class="bx ${d.rate[k] === t ? "on " + LVC[i] : ""}">${t}</i>`).join("") + `</div>`).join("");
+  // 9) other details
+  const row = (a, b) => b === "" || b == null ? "" : `<div class="irow"><span>${a}</span><b>${esc(b)}</b></div>`;
+  const mt = d.menu.times, blk = (k, t) => (d.cool === k || d.cool === "both") && d[k].cap !== "" ?
+    row("&#128716; " + t, `${d[k].rooms || "-"} rooms · capacity ${d[k].cap} · ${d[k].free || 0} free · ${d[k].now || 0} living`) : "";
+  $("dInfo").innerHTML =
+    row("&#128100; Hostel for", GENDER[h.gender]) + row("&#128205; Province", h.province) + row("&#128205; City", h.city) + row("&#128205; Area", h.area) +
+    d.near.map(x => row("&#127891; " + esc(x.n), km(x.m))).join("") +
+    row("&#128716; Total beds", c.beds) + row("&#128101; Total person capacity", c.cap) + row("&#128101; Persons living now", h.persons == null ? c.now : h.persons) +
+    row("&#128719; Free beds now", h.beds == null ? c.free : h.beds) + row("&#128682; Persons per room", c.ppr) + row("&#128682; Total rooms", c.rooms) +
+    row("&#9889; Electricity backup", d.power ? POWER[d.power] : "") + row("&#10052;&#65039; Rooms are", d.cool ? COOL[d.cool] : "") + blk("fan", "Fan rooms") + blk("ac", "AC rooms") +
+    row("&#127859; Breakfast time", t12(mt.b)) + row("&#127861; Lunch time", t12(mt.l)) + row("&#127869; Dinner time", t12(mt.d));
+  $("dFacts").innerHTML = factChips(h);
+  // 10) weekly food menu (today is highlighted) and/or the menu picture
+  const any = d.menu.days.some(x => x.b || x.l || x.d), today = (new Date().getDay() + 6) % 7;
+  $("menuBox").style.display = any || d.menu.pic ? "" : "none";
+  $("dMenu").innerHTML = any ? `<tr><th>Day</th><th>Breakfast${mt.b ? "<small>" + t12(mt.b) + "</small>" : ""}</th><th>Lunch${mt.l ? "<small>" + t12(mt.l) + "</small>" : ""}</th><th>Dinner${mt.d ? "<small>" + t12(mt.d) + "</small>" : ""}</th></tr>` +
+    d.menu.days.map((r, i) => `<tr class="${i === today ? "today" : ""}"><td>${DAYN[i]}</td><td>${esc(r.b)}</td><td>${esc(r.l)}</td><td>${esc(r.d)}</td></tr>`).join("") : "";
+  $("dMenuPic").innerHTML = d.menu.pic ? `<img src="${d.menu.pic}" alt="Weekly menu">` : "";
   show("detail");
-  $("dPhotos").scrollLeft = 0; slideIdx = 0; startSlider();
+  $("dPhotos").scrollLeft = 0; slideIdx = 0; if (ph.length > 1) startSlider();
 }
 
 function showResults(query, list) {
+  list.forEach(h => { h.walk = walkFor(h, query); });   // distance to the college / place that was searched
   state.query = query; state.list = list; state.sort = "walk";
   document.querySelectorAll(".chip").forEach(c => c.classList.toggle("on", c.dataset.sort === "walk"));
   $("resultBar").innerHTML = `&#128205; Results Near <b>${esc(title(query.trim()))}</b> (${list.length} Found)`;
@@ -918,6 +883,42 @@ function setMapTab(v) {
 }
 document.querySelectorAll("#mapTabs .chip").forEach(c => c.addEventListener("click", () => setMapTab(c.dataset.v)));
 
+/* ---- "About this area" text on the page for places with no verified hostels yet.
+   To add or change a text, edit the lines below (the name on the left is lower-case). ---- */
+const AREA_INFO = {
+  "qasimabad": "Qasimabad is a large and growing residential area of Hyderabad, Sindh, with markets, schools, coaching centres and many students living nearby.",
+  "latifabad": "Latifabad is one of the biggest residential areas of Hyderabad, Sindh. It is divided into numbered Units (Unit 1 to Unit 12) and has busy markets, schools and colleges.",
+  "hirabad": "Hirabad is a residential and commercial area of Hyderabad, Sindh, with busy markets and easy transport to the city centre.",
+  "hussainabad": "Hussainabad is a residential area of Hyderabad, Sindh, with local markets and schools close by.",
+  "saddar": "Saddar is the central market area of Hyderabad, Sindh, with shops, banks and public transport.",
+  "autobahn road": "Autobahn Road is a main road of Hyderabad, Sindh, with houses, shops and public transport along it.",
+  "jamshoro": "Jamshoro is a town near Hyderabad, Sindh, known for its universities: Sindh University, Mehran University of Engineering and Technology (MUET) and Liaquat University of Medical and Health Sciences (LUMHS). Many students rent hostels here.",
+  "tando jam": "Tando Jam is a town near Hyderabad, Sindh, known for Sindh Agriculture University.",
+  "kotri": "Kotri is an industrial town near Hyderabad and Jamshoro, Sindh.",
+  "hyderabad": "Hyderabad is the second-largest city of Sindh, with many universities, colleges and student areas such as Qasimabad, Latifabad and Hirabad.",
+  "karachi": "Karachi is the largest city of Pakistan and the capital of Sindh, with many universities and student areas.",
+  "lahore": "Lahore is the capital of Punjab and one of the biggest student cities of Pakistan.",
+  "islamabad": "Islamabad is the capital of Pakistan, with many universities and well-planned sectors.",
+  "johar town": "Johar Town is a large residential and commercial area of Lahore, popular with students because many colleges and universities are close.",
+  "h 12": "H-12 is a sector of Islamabad and the home of NUST (National University of Sciences and Technology)."
+};
+function showAreaInfo(query) {
+  const nq = norm(query), el = $("areaInfo");
+  const key = Object.keys(AREA_INFO).filter(k => (" " + nq + " ").includes(" " + k + " ")).sort((a, b) => b.length - a.length)[0];
+  const hydNames = HYD_AREAS.filter(a => (" " + nq + " ").includes(" " + norm(a) + " ")), isHyd = !!hydNames.length || /\bhyderabad\b/.test(nq) || /\blatifabad unit\b/.test(nq);
+  const name = hydNames.length && norm(hydNames[0]) === nq ? hydNames[0] : title(nq.replace(/\b(hostels?|near|in|boys|girls)\b/g, "").replace(/\s+/g, " ").trim() || nq);
+  let txt = key ? AREA_INFO[key]
+    : isHyd ? `${esc(name)} is an area of Hyderabad, Sindh. We are adding verified student hostels here.`
+    : `We do not have verified details about ${esc(name)} yet. Use the map below to see the place and the hostels near it.`;
+  let html = `<h3>&#128214; About ${esc(name)}</h3><p>${key ? esc(txt) : txt}</p>`;
+  if (isHyd) {                                           // other Hyderabad areas to try
+    const others = HYD_AREAS.filter(a => norm(a) !== nq).slice(0, 8);
+    html += `<p style="margin-top:6px"><b>Other Hyderabad areas:</b></p>` + others.map(a => `<button type="button" class="chip" data-a="${esc(a)}">${esc(a)}</button>`).join("");
+  }
+  el.innerHTML = html;
+}
+$("areaInfo").addEventListener("click", e => { const b = e.target.closest(".chip"); if (b) { $("q").value = b.dataset.a; doSearch(); } });
+
 function showFallback(query) {
   const q = encodeURIComponent("student hostels near " + query);
   $("fbBar").textContent = `"${query}" is coming soon`;
@@ -930,6 +931,7 @@ function showFallback(query) {
     b.onclick = () => { $("q").value = pretty(x.n); doSearch(); };
     $("didYou").appendChild(b);
   });
+  showAreaInfo(query);
   const gl = loadGoogleList(query);
   // Free map (no key): first tab shows the PLACE you searched, second tab shows hostels near it.
   fbQuery = query; $("mapTabs").style.display = ""; setMapTab("place");
@@ -944,9 +946,12 @@ function doSearch() {
     const query = $("q").value.trim();
     if (!query) { $("q").focus(); return; }
     hideSugg(); $("q").blur(); $("home").classList.remove("typing");
-    const list = search(query);
-    logSearch(query, list);                      // saves what people search (see section I)
-    withLoader(() => list.length ? showResults(query, list) : showFallback(query));   // ship wheel while loading
+    withLoader(async () => {                     // ship wheel while the live hostel list loads
+      await liveReady;
+      const list = search(query);
+      logSearch(query, list); sendSearch(query, list);   // saves what people search (sections I and O)
+      return list.length ? showResults(query, list) : showFallback(query);
+    });
   } catch (err) {
     alert("Search error: " + err.message);   // shows the real problem if something breaks
   }
@@ -999,11 +1004,22 @@ function oldCopy(text, done) {                     // backup way, for viewers th
 
 /* ---------- H. SPELLING-FRIENDLY SUGGESTIONS ---------- */
 const PLACES = new Map();      // name -> label shown on the right of each suggestion
-const add = (n, label) => { if (!PLACES.has(n.toLowerCase())) PLACES.set(n.toLowerCase(), label); };
-HOSTELS.forEach(h => { add(h.area, "Area"); add(h.city, "City"); (h.near || []).forEach(n => add(n, "College / Area")); });
-// Popular places with no hostels yet: helps fix the spelling before we search Google
-"Karachi,Lahore,Islamabad,Rawalpindi,Peshawar,Quetta,Multan,Faisalabad,Sukkur,Larkana,Nawabshah,Gujranwala,Sialkot,Bahawalpur,Abbottabad,Mardan,Sargodha,Mirpur Khas,Dadu,Kotri"
-  .split(",").forEach(n => add(n, "City"));
+const add = (n, label) => { if (n && !PLACES.has(n.toLowerCase())) PLACES.set(n.toLowerCase(), label); };
+/* Hyderabad (Sindh) areas and colleges: they show while typing even before a hostel is added there.
+   To add or remove a name, just edit these lists (names are separated by commas). */
+const HYD_AREAS = "Qasimabad,Latifabad,Hirabad,Hussainabad,Saddar,Autobahn Road,Citizen Colony,Wahdat Colony,Gulistan-e-Sajjad,Gulshan-e-Shahbaz,Naseem Nagar,Pretabad,Tilak Incline,Gari Khata,Fateh Chowk,Kali Mori,Pinyari,Hala Naka,Phuleli,Rani Bagh,Wadhu Wah Road,Hyderabad Bypass,Jamshoro Road,Cantonment,Tando Jam,Tando Wali Muhammad,Kotri,Jamshoro".split(",");
+const HYD_COLLEGES = "Sindh University,Mehran University,MUET,Liaquat University,LUMHS,Isra University,Government College University,Government City College,Sindh Agriculture University".split(",");
+function buildPlaces() {                           // called again when the live hostel list arrives
+  PLACES.clear();
+  HOSTELS.forEach(h => { add(h.name, "Hostel"); add(h.area, "Area"); add(h.city, "City"); (h.near || []).forEach(n => add(n, "College / Area")); });
+  // Popular cities with no hostels yet: helps fix the spelling before we search Google
+  "Karachi,Hyderabad,Lahore,Islamabad,Rawalpindi,Peshawar,Quetta,Multan,Faisalabad,Sukkur,Larkana,Nawabshah,Gujranwala,Sialkot,Bahawalpur,Abbottabad,Mardan,Sargodha,Mirpur Khas,Dadu,Kotri,Jamshoro"
+    .split(",").forEach(n => add(n, "City"));
+  HYD_AREAS.forEach(n => add(n, "Hyderabad area"));
+  for (let u = 1; u <= 12; u++) add("Latifabad Unit " + u, "Hyderabad area");
+  HYD_COLLEGES.forEach(n => add(n, "College, Hyderabad"));
+}
+buildPlaces();
 
 const pretty = n => n.length <= 4 ? n.toUpperCase() : title(n);
 
@@ -1106,11 +1122,14 @@ document.addEventListener("securitypolicyviolation", e => {
 /* ---------- L. FILL THE SPACE WHILE TYPING (popular + recent searches) ---------- */
 function renderFill() {
   const chip = t => `<button type="button" class="chip" data-s="${esc(t)}">${esc(t)}</button>`;
-  $("popular").innerHTML = ["Qasimabad", "Jamshoro", "Johar Town", "Gulshan-e-Iqbal", "H-12",
-                            "Hyderabad", "Lahore", "Karachi", "Islamabad"].map(chip).join("");
+  const cnt = {}; HOSTELS.forEach(h => [h.area, h.city].forEach(n => { if (n) cnt[n] = (cnt[n] || 0) + 1; }));
+  const pop = Object.keys(cnt).sort((a, b) => cnt[b] - cnt[a]).slice(0, 9);
+  ["Qasimabad", "Jamshoro", "Johar Town", "Gulshan-e-Iqbal", "H-12", "Hyderabad", "Lahore", "Karachi", "Islamabad"]   // the old list: fills up to 9 when fewer areas have hostels
+    .forEach(n => { if (pop.length < 9 && !pop.some(x => norm(x) === norm(n))) pop.push(n); });
+  $("popular").innerHTML = pop.map(chip).join(""); $("popHead").style.display = $("popular").style.display = pop.length ? "" : "none";
   let recent = [];
   try {
-    recent = [...new Set(JSON.parse(localStorage.getItem("waypakLog") || "[]").map(r => r.search).reverse())].slice(0, 5);
+    recent = [...new Set(JSON.parse(localStorage.getItem("waypakLog") || "[]").map(r => r.search).filter(s => !/^COMPLAINT/.test(s)).reverse())].slice(0, 5);
   } catch (e) {}
   $("recent").innerHTML = recent.map(chip).join("");
   $("recentBox").style.display = recent.length ? "block" : "none";
@@ -1263,36 +1282,63 @@ setTimeout(finishBoot, 25000);                          // safety: never keep th
 (function () {                                           // put your logo file next to this page and call it logo.png: it replaces the picture by itself
   const t = new Image(); t.onload = () => { $("brandImg").src = "logo.png"; }; t.src = "logo.png";
 })();
+const okUrl = u => /^https:\/\/(drive\.google\.com\/thumbnail\?id=[\w-]+&sz=w\d+|lh3\.googleusercontent\.com\/[\w\-\/=]+)$/.test(String(u));
+const clean = s => String(s == null ? "" : s).replace(/[<>"'&`]/g, "").slice(0, 120);        // nothing from the sheet can inject code
+const soft = s => String(s == null ? "" : s).replace(/[<>\u0000-\u001f]/g, " ").trim().slice(0, 120);   // food / names: "&" is fine, it is escaped when shown
+const dg = (x, n = 5) => String(x == null ? "" : x).replace(/\D/g, "").slice(0, n);
+function liveDetails(o) {                                // rebuilds the admin's "details" block so only expected values get in
+  o = o && typeof o === "object" ? o : {};
+  const grp = x => ({rooms: dg(x && x.rooms), cap: dg(x && x.cap), free: dg(x && x.free), now: dg(x && x.now)}), m = o.menu || {}, t = m.times || {}, c = o.cap || {};
+  const tm = s => /^\d{1,2}:\d{2}$/.test(String(s)) ? String(s) : "", rate = {};
+  CHECKS.forEach(([k]) => { if (o.rate && LV.indexOf(o.rate[k]) >= 0) rate[k] = o.rate[k]; });
+  return {near: (Array.isArray(o.near) ? o.near : []).slice(0, 20).map(x => ({n: clean(x && x.n), m: Math.max(0, Math.round(Number(x && x.m) || 0))})).filter(x => x.n && x.m > 0),
+    menu: {times: {b: tm(t.b), l: tm(t.l), d: tm(t.d)}, days: Array.from({length: 7}, (_, i) => { const r = (Array.isArray(m.days) && m.days[i]) || {}; return {b: soft(r.b), l: soft(r.l), d: soft(r.d)}; }), pic: okUrl(m.pic) ? m.pic : ""},
+    cap: {beds: dg(c.beds), cap: dg(c.cap), now: dg(c.now), free: dg(c.free), ppr: dg(c.ppr, 3), rooms: dg(c.rooms)},
+    power: POWER[o.power] ? o.power : "", cool: COOL[o.cool] ? o.cool : "", fan: grp(o.fan), ac: grp(o.ac), rate};
+}
+function applyLive(d) {
+  (d.hostels || []).forEach(x => {
+    if (!x.pub) return;                                   // only hostels the admin put on the website
+    let h = HOSTELS.find(y => y.liveNo === x.no);
+    if (!h) { h = {id: 1000 + Number(x.no), liveNo: Number(x.no)}; HOSTELS.push(h); }
+    h.name = clean(x.name); h.city = clean(x.city); h.area = clean(x.area || x.city); h.province = clean(x.province);
+    h.d = liveDetails(x.details);
+    h.near = (x.near || []).map(clean).filter(Boolean); if (!h.near.length) h.near = h.d.near.map(n => n.n);
+    h.walk0 = h.walk = h.d.near.length ? Math.min(...h.d.near.map(n => n.m)) : (Number(x.walk) > 0 ? Number(x.walk) : 500);
+    h.gender = GENDER[x.hgender] ? x.hgender : "boys";
+    h.price = x.rent > 0 ? Number(x.rent) : 0;            // the monthly price = the fan-room price
+    const free = h.d.cap.free === "" ? undefined : Number(h.d.cap.free), now = h.d.cap.now === "" ? undefined : Number(h.d.cap.now);
+    h.beds = x.beds != null ? Number(x.beds) : free;      // the owner's latest monthly update wins over the first entry
+    h.persons = x.persons != null ? Number(x.persons) : now;
+    h.owner = clean(x.owner); h.ownerPic = okUrl(x.picUrl) ? x.picUrl : "";
+    h.photos = (x.photos || []).filter(okUrl).slice(0, 12);
+    h.live = true;
+  });
+  buildPlaces();
+}
 async function syncLive() {                              // everything the admin saves (rent, beds, pictures, new hostels) appears here by itself
   if (!CONFIG.LIVE_URL) return;
+  let d = null;
   try {
-    const ac = new AbortController(), to = setTimeout(() => ac.abort(), 12000);
-    const d = await (await fetch(CONFIG.LIVE_URL, {signal: ac.signal})).json(); clearTimeout(to);
-    const clean = s => String(s == null ? "" : s).replace(/[<>"'&`]/g, "").slice(0, 120);        // nothing from the sheet can inject code
-    const okUrl = u => /^https:\/\/(drive\.google\.com\/thumbnail\?id=[\w-]+&sz=w\d+|lh3\.googleusercontent\.com\/[\w\-\/=]+)$/.test(String(u));
-    (d.hostels || []).forEach(x => {
-      let h = x.web ? HOSTELS.find(y => y.id === x.web) : null;
-      if (!h && x.pub) {                                  // a hostel added in the admin page: it joins the list by itself
-        h = HOSTELS.find(y => y.liveNo === x.no);
-        if (!h) { h = {id: 1000 + Number(x.no), liveNo: Number(x.no), name: "", area: "", city: "", near: [], walk: 500, price: 0, gender: "boys"}; HOSTELS.push(h); }
-        h.name = clean(x.name); h.city = clean(x.city); h.area = clean(x.area || x.city); h.near = (x.near || []).map(clean).filter(Boolean);
-        h.walk = Number(x.walk) > 0 ? Number(x.walk) : 500; h.gender = x.hgender === "girls" ? "girls" : "boys";
-      }
-      if (!h) return;
-      if (x.rent > 0) h.price = x.rent; if (x.beds != null) h.beds = x.beds; if (x.persons != null) h.persons = x.persons;
-      if (x.owner) h.owner = clean(x.owner);
-      if (okUrl(x.picUrl)) h.ownerPic = x.picUrl;
-      const ph = (x.photos || []).filter(okUrl).slice(0, 6); if (ph.length) h.photos = ph;
-      h.live = true;
-    });
-  } catch (e) {}
+    const ac = new AbortController(), to = setTimeout(() => ac.abort(), 15000);
+    d = await (await fetch(CONFIG.LIVE_URL, {signal: ac.signal})).json(); clearTimeout(to);
+    try { localStorage.setItem("waypakLive", JSON.stringify(d)); } catch (e) {}
+  } catch (e) { try { d = JSON.parse(localStorage.getItem("waypakLive") || "null"); } catch (x) {} }   // offline: show the last list we saw
+  if (d) applyLive(d);
 }
-syncLive();
+const liveReady = syncLive();
+function sendSearch(query, list) {                       // tells Waypak what people search, so the admin can see which areas are missing
+  if (!CONFIG.LIVE_URL) return;
+  try { fetch(CONFIG.LIVE_URL, {method: "POST", mode: "no-cors", keepalive: true, body: JSON.stringify({a: "search", area: query.trim().slice(0, 60), city: list.length ? list[0].city : ""})}).catch(() => {}); } catch (e) {}
+}
 
 /* ---------- P. HEADER HEIGHT, TIP POSITION, COMPLAINT BOX ---------- */
 const setHH = () => document.documentElement.style.setProperty("--hh", document.querySelector("header").offsetHeight + "px");
 new ResizeObserver(setHH).observe(document.querySelector("header")); setHH();
 placeTip("home");
+$("callZong").href = "tel:" + CONFIG.CALL_ZONG; $("zongTxt").textContent = phoneShow(CONFIG.CALL_ZONG);
+$("callJazz").href = "tel:" + CONFIG.CALL_JAZZ; $("jazzTxt").textContent = phoneShow(CONFIG.CALL_JAZZ);
+$("waJazz").href = "https://wa.me/" + CONFIG.WHATSAPP; $("waTxt").textContent = phoneShow(CONFIG.CALL_JAZZ);
 
 $("cText").addEventListener("input", () => { $("cCount").textContent = $("cText").value.length + " / 500"; });
 $("cSend").addEventListener("click", () => {
