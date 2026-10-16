@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-     <meta name="google-site-verification" content="Kt9Wch88NB7aY7jx9Z2nEy7VwPUqy4shHRTQXDphBcg" />
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, interactive-widget=resizes-content">
 <title>Waypak - Pakistani Student Hostels Directory</title>
+<meta name="google-site-verification" content="Kt9Wch88NB7aY7jx9Z2nEy7VwPUqy4shHRTQXDphBcg" />
 
 <!-- ============================================================
      PART 1: CSS  (how the website looks)
@@ -307,7 +308,7 @@ header { display:flex; align-items:center; gap:8px; padding:6px 10px; }
 .irow:last-child { border:0; }
 .irow b { text-align:right; }
 .menuWrap { overflow-x:auto; }
-table.menu { width:100%; border-collapse:collapse; font-size:13px; min-width:420px; }
+table.menu { width:100%; border-collapse:collapse; font-size:13px; min-width:0; }
 table.menu th, table.menu td { padding:7px 6px; border-bottom:1px solid #e3edf3; text-align:left; vertical-align:top; }
 table.menu th { background:#eaf3f9; font-size:12px; color:#2b4c63; }
 table.menu tr.today td { background:#fff6dc; }
@@ -418,6 +419,25 @@ table.menu td:first-child { font-weight:700; white-space:nowrap; }
 .menu th small{display:block;font-weight:400;font-size:11px}
 .menuPic img{width:100%;border-radius:12px;margin-top:10px;display:block}
 .menu{width:100%;table-layout:fixed}.menu td,.menu th{font-size:12.5px;padding:6px 4px;word-break:break-word;vertical-align:top}.menu th:first-child,.menu td:first-child{width:23%}
+/* ---- v9 hostel page: calm layout, one accent colour ---- */
+.pgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
+.pgrid .pc{border-radius:12px;padding:8px 6px;border:1px solid var(--line);background:#fff}
+.pgrid .pc small{display:block;font-size:12px;color:#567;font-weight:700}
+.pgrid .pc b{font-size:22px;color:var(--wood)}.pgrid .pc i{display:block;font-style:normal;font-size:11.5px;color:#567;margin-top:2px}
+.revTop{display:flex;align-items:center;gap:14px}
+.score{flex:none;width:74px;height:74px;border-radius:50%;display:grid;place-content:center;text-align:center;color:#fff;background:var(--blue);border:4px solid #fff;outline:2px solid var(--blue)}
+.score b{font-size:25px;line-height:1}.score small{font-size:10px;opacity:.9}
+.revTop .rh{margin:0}.revTop .vlabel{font-size:13px;color:#567;font-weight:700;margin-top:2px}
+.rev .rtext{margin:12px 0 2px;font-size:14.5px;line-height:1.6;color:#27384a}
+.fac{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+.ft{display:flex;align-items:center;gap:9px;padding:9px 10px;border-radius:12px;background:#fff;border:1px solid var(--line);min-width:0}
+.ft i{font-style:normal;font-size:20px;flex:none}.ft span{display:block;font-size:11px;color:#567;font-weight:700}.ft b{display:block;font-size:13.5px;line-height:1.25}
+.ft.no b{color:#8a97a3;font-weight:600}
+.nearh{font-size:14px;font-weight:800;margin:16px 0 2px}
+.nrow{display:flex;justify-content:space-between;gap:10px;padding:7px 0;border-bottom:1px dashed #d6e4ec;font-size:14px}.nrow b{white-space:nowrap}
+.more{margin-top:6px}.more summary{cursor:pointer;font-size:13.5px;font-weight:700;color:var(--blue);padding:6px 0}
+.slider .cnt{position:absolute;top:10px;right:10px;background:rgba(0,0,0,.55);color:#fff;font-size:12px;font-weight:700;padding:3px 10px;border-radius:12px}
+.cardPlace{font-size:13px;color:#345}
 </style>
 </head>
 
@@ -496,7 +516,7 @@ table.menu td:first-child { font-weight:700; white-space:nowrap; }
         <div class="track" id="dPhotos"></div>
         <button type="button" class="sBtn prev" id="sPrev" aria-label="Previous photo">&#8249;</button>
         <button type="button" class="sBtn next" id="sNext" aria-label="Next photo">&#8250;</button>
-        <div class="dots" id="dDots"></div>
+        <div class="dots" id="dDots"></div><span class="cnt" id="dCnt"></span>
       </div>
       <!-- 2. price per month (fan room price is the default) -->
       <section class="priceCard">
@@ -518,13 +538,16 @@ table.menu td:first-child { font-weight:700; white-space:nowrap; }
     </div>
 
     <div class="dright">
-      <!-- 5. honest review + Waypak rating (from the admin's checklist) -->
+      <!-- 5. rating out of 10 + short honest review -->
       <section class="rev">
-        <h3 class="rh">Honest <b>Review</b> by Waypak</h3>
-        <p id="dText"></p>
-        <div class="rv good"><b>&#128077; What we liked</b><ul id="dGood"></ul></div>
-        <div class="rv bad"><b>&#9888;&#65039; Needs improvement</b><ul id="dBad"></ul></div>
-        <div class="rate">Waypak rating: <b id="dRate"></b></div>
+        <div class="revTop"><div class="score" id="dScore"><b id="dRate">-</b><small>out of 10</small></div>
+          <div><h3 class="rh">Honest <b>Review</b> by Waypak</h3><div class="vlabel" id="dLabel"></div></div></div>
+        <p class="rtext" id="dText"></p>
+      </section>
+      <!-- 6. the Waypak checklist (always visible) -->
+      <section class="rev" id="ckBox">
+        <h3 class="rh">&#9989; Waypak Checklist</h3>
+        <div id="dChecks"></div>
       </section>
       <!-- 7. total rooms, persons now, free beds -->
       <div class="stats">
@@ -532,16 +555,11 @@ table.menu td:first-child { font-weight:700; white-space:nowrap; }
         <div class="stat"><b id="dPersons"></b><span>Persons now</span></div>
         <div class="stat free" id="dFreeBox"><b id="dFree"></b><span>Free beds</span></div>
       </div>
-      <!-- 8. checklist -->
-      <section class="rev">
-        <h3 class="rh">&#9989; Waypak Checklist</h3>
-        <div id="dChecks"></div>
-      </section>
-      <!-- 9. all other details the admin filled in -->
-      <section class="rev">
-        <h3 class="rh">Hostel details</h3>
-        <div id="dInfo"></div>
-        <div class="perks" id="dFacts" style="margin-top:10px"></div>
+      <!-- 8. facilities + places near the hostel -->
+      <section class="rev" id="facBox">
+        <h3 class="rh">Facilities</h3>
+        <div class="fac" id="dFac"></div>
+        <div id="dNear"></div>
       </section>
       <!-- 10. weekly food menu -->
       <section class="rev" id="menuBox">
@@ -656,13 +674,37 @@ const CONFIG = {
 
 /* ---------- B. DATA: hostels come ONLY from the Waypak admin app (loaded in section O) ----------
    Nothing is typed in here. Add or edit a hostel in the admin app and it appears here by itself. */
-const HOSTELS = [];
+// DEMO hostels "xyz" and "zxy": only to show how results and pages look. Delete this block (keep "const HOSTELS = [];") when you do not need it.
+const demoPic = (a, b, t) => "data:image/svg+xml," + encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="800" height="500"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${a}"/><stop offset="1" stop-color="${b}"/></linearGradient></defs><rect width="800" height="500" fill="url(#g)"/><text x="400" y="270" font-size="48" font-family="sans-serif" fill="#fff" text-anchor="middle">${t}</text></svg>`);
+const demoMenu = {times: {b: "08:00", l: "13:00", d: "20:00"}, pic: "", days: [["Paratha and tea", "Daal chawal", "Chicken karahi"], ["Egg and paratha", "Aloo gosht", "Biryani"], ["Halwa puri", "Mix sabzi", "Daal fry"], ["Paratha and tea", "Chana pulao", "Chicken curry"], ["Egg and paratha", "Daal chawal", "Qeema"], ["Halwa puri", "Biryani", "Aloo anda"], ["Paratha and tea", "Chicken roast", "Pulao"]].map(r => ({b: r[0], l: r[1], d: r[2]}))};
+const HOSTELS = [{
+  id: 9999, name: "xyz", city: "Hyderabad", area: "Qasimabad", province: "Sindh", gender: "boys", price: 8000, beds: 10, persons: 30,
+  owner: "Haji Ahmed", ownerPic: "", live: true, demo: true, walk: 200, walk0: 200, near: [],
+  photos: ["Room 1", "Room 2", "Room 3", "Common area", "Dining hall", "Bathroom", "Study area", "Entrance", "Kitchen", "Roof"].map((t, i) => demoPic(`hsl(${200 + i * 12},45%,62%)`, `hsl(${215 + i * 12},45%,34%)`, t)),
+  d: {near: [{n: "Muslim College", m: 200}, {n: "ATP School", m: 300}, {n: "University of Sindh", m: 500}], menu: demoMenu,
+    cap: {beds: "40", cap: "40", now: "30", free: "10", ppr: "4", rooms: "10"}, power: "both", cool: "both",
+    fan: {rooms: "6", cap: "24", free: "6", now: "18", price: "8000"}, ac: {rooms: "4", cap: "16", free: "4", now: "12", price: "14000"},
+    safety: {cctv: "yes", store: "both"}, score: "7.8",
+    review: "A very good hostel overall. Food quality, security and WiFi speed stand out, but quietness is poor and needs improvement. Worth a visit.",
+    rate: {food: "Excellent", clean: "Very good", room: "Good", space: "Good", bath: "Good", water: "Very good", secure: "Excellent", air: "Very good", quiet: "Poor", wifi: "Excellent"}}
+}, {
+  id: 9998, name: "zxy", city: "Hyderabad", area: "Qasimabad", province: "Sindh", gender: "boys", price: 6500, beds: 3, persons: 21,
+  owner: "Mr. Bilal", ownerPic: "", live: true, demo: true, walk: 100, walk0: 100, near: [],
+  photos: ["Room 1", "Room 2", "Room 3", "Lobby", "Dining hall", "Bathroom", "Study area", "Entrance", "Kitchen", "Roof"].map((t, i) => demoPic(`hsl(${20 + i * 10},45%,64%)`, `hsl(${30 + i * 10},45%,34%)`, t)),
+  d: {near: [{n: "ATP School", m: 100}, {n: "Muslim College", m: 1000}], menu: demoMenu,
+    cap: {beds: "24", cap: "24", now: "21", free: "3", ppr: "3", rooms: "8"}, power: "solar", cool: "fan",
+    fan: {rooms: "8", cap: "24", free: "3", now: "21", price: "6500"}, ac: {rooms: "", cap: "", free: "", now: "", price: ""},
+    safety: {cctv: "no", store: "lockers"}, score: "6.2",
+    review: "A decent hostel with a few things to improve. Cleaning and water supply stand out, but food quality and bathrooms are poor and need improvement. Visit once and check the room before you pay.",
+    rate: {food: "Poor", clean: "Excellent", room: "Good", space: "Good", bath: "Poor", water: "Very good", secure: "Good", air: "Good", quiet: "Good", wifi: "Good"}}
+}];
 const LV = ["Poor", "Good", "Very good", "Excellent"], LVC = ["poor", "good", "vgood", "excellent"];
 const CHECKS = [["food", "Food quality"], ["clean", "Cleaning"], ["room", "Room quality"], ["space", "Room space according to persons"], ["bath", "Bathroom"],
                 ["water", "Water supply"], ["secure", "Security and privacy"], ["air", "Ventilation (air)"], ["quiet", "Quietness (silent surroundings)"], ["wifi", "WiFi speed"]];
 const DAYN = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
 const POWER = {none: "No power backup", solar: "Solar system", generator: "Generator", both: "Solar + generator"};
-const COOL = {fan: "Fan rooms", ac: "AC rooms", both: "Fan + AC rooms"};
+const COOL = {fan: "Fan rooms", ac: "All AC rooms", both: "Fan + AC rooms"};
+const STORE = {cupboards: "Cupboards", lockers: "Lockers", both: "Cupboards + lockers"};
 const GENDER = {boys: "Boys", girls: "Girls", both: "Boys & girls"};
 
 /* ---------- C. SEARCH ENGINE ---------- */
@@ -694,24 +736,42 @@ function wordScore(t, words) {
   return best;
 }
 
+// The typed words without filler words and without boys / girls
+const qTokens = q => norm(q).split(" ").filter(t => t && !STOP.has(t) && !/^(girls?|boys?|female|male)$/.test(t));
+// One hostel against the typed words. Words that fit the hostel name / area / city are used up first;
+// whatever is left must be one nearby place (college, school, university) from the admin's list of that hostel.
+// Returns null when it does not fit, else {place: the matching near place with its distance, or null}.
+function matchHostel(h, tokens) {
+  const base = norm([h.area, h.city, h.name].join(" ")).split(" ");
+  const rest = tokens.filter(t => wordScore(t, base) === 0);
+  if (!rest.length) return {place: null};
+  const hits = ((h.d && h.d.near) || []).filter(x => { const w = norm(x.n).split(" "); return rest.every(t => wordScore(t, w) > 0); });
+  return hits.length ? {place: hits.reduce((a, b) => b.m < a.m ? b : a)} : null;
+}
+
 // Returns the list of hostels that match the typed text (empty list = not in our website)
 function search(query) {
   const text = norm(query);
   let gender = null;                                   // "girls hostel in lahore" filters girls only
   if (/\b(girls?|female)\b/.test(text)) gender = "girls";
   else if (/\b(boys?|male)\b/.test(text)) gender = "boys";
+  const okG = h => !gender || h.gender === gender || h.gender === "both";
 
-  const tokens = text.split(" ").filter(t => t && !STOP.has(t) && !/^(girls?|boys?|female|male)$/.test(t));
-  if (!tokens.length) return gender ? HOSTELS.filter(h => h.gender === gender || h.gender === "both") : [];
+  const tokens = qTokens(text);
+  if (!tokens.length) return gender ? HOSTELS.filter(okG) : [];
 
   const found = [];
-  for (const h of HOSTELS) {
-    if (gender && h.gender !== gender && h.gender !== "both") continue;
-    const words = norm([h.area, h.city, h.name, ...(h.near || [])].join(" ")).split(" ");
-    const scores = tokens.map(t => wordScore(t, words));
-    const matched = scores.filter(s => s > 0).length;
-    if (matched / tokens.length >= 0.5)                // at least half of the typed words must match
-      found.push({h, matched, total: scores.reduce((a, b) => a + b, 0)});
+  for (const h of HOSTELS) {                           // exact way: every typed word is used (name / area / city / one nearby place)
+    if (!okG(h)) continue;
+    const m = matchHostel(h, tokens); if (m) found.push({h, m: m.place ? m.place.m : 1e9});
+  }
+  if (found.length) return found.sort((a, b) => a.m - b.m).map(x => x.h);
+
+  for (const h of HOSTELS) {                           // soft way (typos, half of the words): only when the exact way found nothing
+    if (!okG(h)) continue;
+    const words = norm([h.area, h.city, h.name, ...((h.d && h.d.near) || []).map(x => x.n)].join(" ")).split(" ");
+    const scores = tokens.map(t => wordScore(t, words)), matched = scores.filter(x => x > 0).length;
+    if (matched / tokens.length >= 0.5) found.push({h, matched, total: scores.reduce((a, b) => a + b, 0)});
   }
   found.sort((a, b) => b.matched - a.matched || b.total - a.total);
   return found.map(x => x.h);
@@ -762,7 +822,7 @@ function renderList() {
   $("list").innerHTML = sorted.map((h, i) => `
     <div class="card ${h.id === state.selected ? "sel" : ""}" data-id="${h.id}">
       <h3>${i + 1}. ${esc(h.name)}</h3>
-      <div class="row"><span>&#128205; ${dist(h.walk)} <span class="tag">${GENDER[h.gender] || h.gender}</span></span>
+      <div class="row"><span>&#128205; ${h.walkPlace ? `${km(h.walk)} from ${esc(h.walkPlace)}` : dist(h.walk)} <span class="tag">${GENDER[h.gender] || h.gender}</span></span>
       ${bedsBadge(h)}<b>${rs(h.price)}/mo</b></div>
     </div>`).join("");
 }
@@ -780,6 +840,7 @@ function factChips(h) {                 // everything comes from what the admin 
   const d = h.d, c = d.cap, out = [];
   if (d.power) out.push(POWER[d.power]);
   if (d.cool) out.push(COOL[d.cool]);
+  if (d.safety && d.safety.cctv === "yes") out.push("CCTV");
   const xs = [];
   if (c.ppr) xs.push("&#128101; " + (c.ppr === "1" ? "Single room" : c.ppr + " per room"));
   xs.push("&#128100; " + (GENDER[h.gender] || "Boys"));
@@ -793,11 +854,12 @@ function select(id) {
   renderSheet(HOSTELS.find(h => h.id === id));
 }
 
-// distance to what the person searched (college / area), otherwise to the nearest place the admin listed
+// distance to the college / school / university that was searched (each hostel has its own distance); otherwise to its nearest listed place
 function walkFor(h, query) {
-  const near = h.d.near, toks = norm(query).split(" ").filter(t => t && !STOP.has(t));
-  const hit = near.filter(x => toks.some(t => wordScore(t, norm(x.n).split(" ")) > 0)).map(x => x.m);
-  return hit.length ? Math.min(...hit) : (near.length ? Math.min(...near.map(x => x.m)) : (h.walk0 || h.walk));
+  const tokens = qTokens(query), m = tokens.length ? matchHostel(h, tokens) : null, near = (h.d && h.d.near) || [];
+  if (m && m.place) { h.walkPlace = m.place.n; return m.place.m; }
+  const n = near.length ? near.reduce((a, b) => b.m < a.m ? b : a) : null;
+  h.walkPlace = n ? n.n : ""; return n ? n.m : (h.walk0 || h.walk);
 }
 const t12 = s => { const m = /^(\d{1,2}):(\d{2})$/.exec(s || ""); if (!m) return ""; let H = +m[1]; const ap = H >= 12 ? "PM" : "AM"; H = H % 12 || 12; return H + ":" + m[2] + " " + ap; };
 const km = m => m < 1000 ? m + " m" : (Math.round(m / 100) / 10) + " km";
@@ -810,49 +872,51 @@ function openDetail(id) {
   const msg = `Assalam o Alaikum, I want to register for ${h.name} (${h.area}, ${h.city}) through Waypak. I will pay offline. Please send my Rs. 500 discount code.`;
   // 1) photo slider (slides by itself, swipe or arrows)
   const ph = h.photos || [];
-  $("dPhotos").innerHTML = ph.length ? ph.map((u, i) => `<img src="${u}" alt="${esc(h.name)} ${i + 1}">`).join("") : `<div style="background:linear-gradient(135deg,#8fb0d6,#3d5f8a)">&#128719;<small>Photos coming soon</small></div>`;
+  $("dPhotos").innerHTML = ph.length ? ph.map((u, i) => `<img src="${u}" alt="${esc(h.name)} ${i + 1}"${i ? ' loading="lazy"' : ""}>`).join("") : `<div style="background:linear-gradient(135deg,#8fb0d6,#3d5f8a)">&#128719;<small>Photos coming soon</small></div>`;
   $("dDots").innerHTML = ph.length > 1 ? ph.map((_, i) => `<i class="${i ? "" : "on"}"></i>`).join("") : "";
   $("sPrev").style.display = $("sNext").style.display = ph.length > 1 ? "" : "none";
-  // 2) price per month (the fan-room price is the default price)
+  $("dCnt").textContent = ph.length > 1 ? "1 / " + ph.length : "";
+  // 2) price per month: fan price = monthly fee; "ac" = AC price; "both" = two boxes (price + rooms + free beds, said once)
   $("dName").textContent = h.name; $("dArea").textContent = [h.area, h.city, h.province].filter(Boolean).join(", ");
-  $("dPrice").textContent = h.price ? rs(h.price) : "-";
-  $("dPriceFor").textContent = "per month" + (d.cool === "ac" ? " (AC room)" : d.cool ? " (fan room)" : "");
-  $("dTags").innerHTML = `<span>${esc(GENDER[h.gender] || "Boys")}</span>` + (d.power ? `<span>${esc(POWER[d.power])}</span>` : "") + (d.cool ? `<span>${esc(COOL[d.cool])}</span>` : "");
+  const fanP = Number(d.fan.price) || h.price, acP = Number(d.ac.price) || 0, oneP = d.cool === "ac" ? (acP || h.price) : fanP;
+  $("dPrice").textContent = oneP ? rs(oneP) : "-";
+  $("dPriceFor").textContent = "per month" + (d.cool === "ac" ? " \u00b7 all rooms AC" : d.cool === "fan" ? " \u00b7 fan rooms" : "");
+  const old = document.getElementById("pgrid"); if (old) old.remove();
+  const two = d.cool === "both" && acP > 0; $("dPrice").parentNode.style.display = two ? "none" : "";
+  const pc = (k, ic, t, p) => `<div class="pc"><small>${ic} ${t}</small><b>${rs(p)}</b><i>per month &middot; ${d[k].rooms || "-"} rooms &middot; ${d[k].free || 0} free</i></div>`;
+  if (two) $("dPriceFor").parentNode.insertAdjacentHTML("afterend", `<div class="pgrid" id="pgrid">${pc("fan", "&#127744;", "Fan room", fanP)}${pc("ac", "&#10052;&#65039;", "AC room", acP)}</div>`);
+  $("dTags").innerHTML = `<span>${esc(GENDER[h.gender] || "Boys")}</span>`;
   // 3) register by WhatsApp + the two Waypak numbers
   $("regBtn").href = "https://wa.me/" + CONFIG.WHATSAPP + "?text=" + encodeURIComponent(msg);
   $("regBtn").innerHTML = h.beds === 0 ? "&#128241; Full now &middot; Ask on WhatsApp" : "&#128241; Register by WhatsApp &middot; Pay offline";
   // 4) owner: name + small round picture only
   $("ownerName").textContent = h.owner || "-";
   $("ownerPic").innerHTML = h.ownerPic ? `<img src="${h.ownerPic}" alt="Owner">` : esc((h.owner || "?").replace(/^(Haji|Mrs\.|Mr\.)\s*/, "").charAt(0));
-  // 5) honest review by Waypak, built from the admin's checklist
-  const lv = k => d.rate[k] || "";
-  const cnt = LV.map(l => [l, CHECKS.filter(([k]) => lv(k) === l).length]).filter(x => x[1]).reverse();
-  const rated = CHECKS.filter(([k]) => lv(k)).length;
-  $("dText").textContent = rated ? `Waypak checked ${rated} things at this hostel: ` + cnt.map(([l, n]) => n + " " + l).join(", ") + "." : "Review coming soon.";
-  const liked = [...CHECKS.filter(([k]) => lv(k) === "Excellent"), ...CHECKS.filter(([k]) => lv(k) === "Very good")].map(([k, l]) => lv(k) + " " + l.toLowerCase());
-  const needs = CHECKS.filter(([k]) => lv(k) === "Poor").map(([k, l]) => "Poor " + l.toLowerCase() + ", needs improvement");
-  $("dGood").innerHTML = (liked.length ? liked : ["-"]).map(x => `<li>${esc(x)}</li>`).join("");
-  $("dBad").innerHTML = (needs.length ? needs : [rated ? "Nothing serious found at our visit" : "-"]).map(x => `<li>${esc(x)}</li>`).join("");
-  const sc = score10(h); $("dRate").textContent = sc === null ? "-" : sc + "/10";
+  // 5) rating out of 10 + short review (admin's text)
+  const lv = k => d.rate[k] || "", rated = CHECKS.filter(([k]) => lv(k)).length;
+  const sc = d.score !== "" && Number(d.score) >= 1 && Number(d.score) <= 10 ? Math.round(Number(d.score) * 10) / 10 : score10(h);
+  $("dRate").textContent = sc === null ? "-" : sc;
+  $("dLabel").textContent = sc === null ? "" : sc >= 9 ? "Excellent" : sc >= 7.5 ? "Very good" : sc >= 6 ? "Good" : sc >= 4.5 ? "Average" : "Needs improvement";
+  $("dText").textContent = d.review || (rated ? `Waypak checked ${rated} things at this hostel. See the checklist below.` : "Review coming soon.");
+  // 6) checklist: always visible
+  $("ckBox").style.display = rated ? "" : "none";
+  $("dChecks").innerHTML = CHECKS.map(([k, label]) => `<div class="ck"><span>${label}</span>` +
+    LV.map((t, i) => `<i class="bx ${d.rate[k] === t ? "on " + LVC[i] : ""}">${t}</i>`).join("") + `</div>`).join("");
   // 7) rooms, persons now, free beds
   $("dRooms").textContent = c.rooms || "-"; $("dPersons").textContent = h.persons == null ? "-" : h.persons;
   $("dFree").textContent = h.beds == null ? "-" : h.beds;
   $("dFreeBox").className = "stat free " + (h.beds === 0 ? "full" : h.beds <= 2 ? "low" : "ok");
-  // 8) checklist (Poor / Good / Very good / Excellent) = the admin's checklist
-  $("dChecks").innerHTML = CHECKS.map(([k, label]) => `<div class="ck"><span>${label}</span>` +
-    LV.map((t, i) => `<i class="bx ${d.rate[k] === t ? "on " + LVC[i] : ""}">${t}</i>`).join("") + `</div>`).join("");
-  // 9) other details
-  const row = (a, b) => b === "" || b == null ? "" : `<div class="irow"><span>${a}</span><b>${esc(b)}</b></div>`;
-  const mt = d.menu.times, blk = (k, t) => (d.cool === k || d.cool === "both") && d[k].cap !== "" ?
-    row("&#128716; " + t, `${d[k].rooms || "-"} rooms · capacity ${d[k].cap} · ${d[k].free || 0} free · ${d[k].now || 0} living`) : "";
-  $("dInfo").innerHTML =
-    row("&#128100; Hostel for", GENDER[h.gender]) + row("&#128205; Province", h.province) + row("&#128205; City", h.city) + row("&#128205; Area", h.area) +
-    d.near.map(x => row("&#127891; " + esc(x.n), km(x.m))).join("") +
-    row("&#128716; Total beds", c.beds) + row("&#128101; Total person capacity", c.cap) + row("&#128101; Persons living now", h.persons == null ? c.now : h.persons) +
-    row("&#128719; Free beds now", h.beds == null ? c.free : h.beds) + row("&#128682; Persons per room", c.ppr) + row("&#128682; Total rooms", c.rooms) +
-    row("&#9889; Electricity backup", d.power ? POWER[d.power] : "") + row("&#10052;&#65039; Rooms are", d.cool ? COOL[d.cool] : "") + blk("fan", "Fan rooms") + blk("ac", "AC rooms") +
-    row("&#127859; Breakfast time", t12(mt.b)) + row("&#127861; Lunch time", t12(mt.l)) + row("&#127869; Dinner time", t12(mt.d));
-  $("dFacts").innerHTML = factChips(h);
+  // 8) facilities: only what is not said elsewhere (cooling + price are in the price card, beds are above)
+  const tile = (ic, lab, val, no) => val === "" || val == null ? "" : `<div class="ft ${no ? "no" : ""}"><i>${ic}</i><div><span>${lab}</span><b>${esc(val)}</b></div></div>`;
+  $("dFac").innerHTML =
+    tile("&#9889;", "Electricity backup", d.power ? POWER[d.power] : "", d.power === "none") +
+    tile("&#128249;", "CCTV cameras", d.safety.cctv === "yes" ? "Yes" : d.safety.cctv === "no" ? "No" : "", d.safety.cctv === "no") +
+    tile("&#128274;", "Cupboards / lockers", d.safety.store === "none" ? "None" : (STORE[d.safety.store] || ""), d.safety.store === "none") +
+    tile("&#128682;", "Persons per room", c.ppr ? (c.ppr === "1" ? "Single room" : c.ppr) : "");
+  const nr = [...d.near].sort((a, b) => a.m - b.m).map(x => `<div class="nrow"><span>&#127891; ${esc(x.n)}</span><b>${km(x.m)}</b></div>`);
+  $("dNear").innerHTML = nr.length ? `<div class="nearh">Near this hostel</div>${nr.slice(0, 5).join("")}` +
+    (nr.length > 5 ? `<details class="more"><summary>${nr.length - 5} more places</summary>${nr.slice(5).join("")}</details>` : "") : "";
+  const mt = d.menu.times;
   // 10) weekly food menu (today is highlighted) and/or the menu picture
   const any = d.menu.days.some(x => x.b || x.l || x.d), today = (new Date().getDay() + 6) % 7;
   $("menuBox").style.display = any || d.menu.pic ? "" : "none";
@@ -1011,7 +1075,7 @@ const HYD_AREAS = "Qasimabad,Latifabad,Hirabad,Hussainabad,Saddar,Autobahn Road,
 const HYD_COLLEGES = "Sindh University,Mehran University,MUET,Liaquat University,LUMHS,Isra University,Government College University,Government City College,Sindh Agriculture University".split(",");
 function buildPlaces() {                           // called again when the live hostel list arrives
   PLACES.clear();
-  HOSTELS.forEach(h => { add(h.name, "Hostel"); add(h.area, "Area"); add(h.city, "City"); (h.near || []).forEach(n => add(n, "College / Area")); });
+  HOSTELS.forEach(h => { add(h.name, "Hostel"); add(h.area, "Area"); add(h.city, "City"); (h.near || []).forEach(n => add(n, "College / Area")); ((h.d && h.d.near) || []).forEach(x => add(x.n, "College / Area")); });
   // Popular cities with no hostels yet: helps fix the spelling before we search Google
   "Karachi,Hyderabad,Lahore,Islamabad,Rawalpindi,Peshawar,Quetta,Multan,Faisalabad,Sukkur,Larkana,Nawabshah,Gujranwala,Sialkot,Bahawalpur,Abbottabad,Mardan,Sargodha,Mirpur Khas,Dadu,Kotri,Jamshoro"
     .split(",").forEach(n => add(n, "City"));
@@ -1288,13 +1352,15 @@ const soft = s => String(s == null ? "" : s).replace(/[<>\u0000-\u001f]/g, " ").
 const dg = (x, n = 5) => String(x == null ? "" : x).replace(/\D/g, "").slice(0, n);
 function liveDetails(o) {                                // rebuilds the admin's "details" block so only expected values get in
   o = o && typeof o === "object" ? o : {};
-  const grp = x => ({rooms: dg(x && x.rooms), cap: dg(x && x.cap), free: dg(x && x.free), now: dg(x && x.now)}), m = o.menu || {}, t = m.times || {}, c = o.cap || {};
+  const grp = x => ({rooms: dg(x && x.rooms), cap: dg(x && x.cap), free: dg(x && x.free), now: dg(x && x.now), price: dg(x && x.price, 6)}), m = o.menu || {}, t = m.times || {}, c = o.cap || {}, sf = o.safety && typeof o.safety === "object" ? o.safety : {};
   const tm = s => /^\d{1,2}:\d{2}$/.test(String(s)) ? String(s) : "", rate = {};
   CHECKS.forEach(([k]) => { if (o.rate && LV.indexOf(o.rate[k]) >= 0) rate[k] = o.rate[k]; });
   return {near: (Array.isArray(o.near) ? o.near : []).slice(0, 20).map(x => ({n: clean(x && x.n), m: Math.max(0, Math.round(Number(x && x.m) || 0))})).filter(x => x.n && x.m > 0),
     menu: {times: {b: tm(t.b), l: tm(t.l), d: tm(t.d)}, days: Array.from({length: 7}, (_, i) => { const r = (Array.isArray(m.days) && m.days[i]) || {}; return {b: soft(r.b), l: soft(r.l), d: soft(r.d)}; }), pic: okUrl(m.pic) ? m.pic : ""},
     cap: {beds: dg(c.beds), cap: dg(c.cap), now: dg(c.now), free: dg(c.free), ppr: dg(c.ppr, 3), rooms: dg(c.rooms)},
-    power: POWER[o.power] ? o.power : "", cool: COOL[o.cool] ? o.cool : "", fan: grp(o.fan), ac: grp(o.ac), rate};
+    power: POWER[o.power] ? o.power : "", cool: COOL[o.cool] ? o.cool : "", fan: grp(o.fan), ac: grp(o.ac), rate,
+    safety: {cctv: ["yes", "no"].indexOf(sf.cctv) >= 0 ? sf.cctv : "", store: ["none", "cupboards", "lockers", "both"].indexOf(sf.store) >= 0 ? sf.store : ""},
+    score: /^(10(\.0)?|[1-9](\.\d)?)$/.test(String(o.score)) ? String(o.score) : "", review: String(o.review == null ? "" : o.review).replace(/[<>\u0000-\u0008\u000b-\u001f]/g, " ").trim().slice(0, 1200)};
 }
 function applyLive(d) {
   (d.hostels || []).forEach(x => {
@@ -1366,6 +1432,7 @@ $("dPhotos").addEventListener("scroll", () => {          // keeps the dots in st
   const tr = $("dPhotos"), i = Math.round(tr.scrollLeft / (tr.clientWidth || 1));
   slideIdx = i;
   [...$("dDots").children].forEach((d, k) => d.classList.toggle("on", k === i));
+  if (tr.children.length > 1) $("dCnt").textContent = (i + 1) + " / " + tr.children.length;
 });
 </script>
 </body>
